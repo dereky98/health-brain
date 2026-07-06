@@ -6,6 +6,7 @@
 
 :root {
   --background: #fafaf9;
+  --sidebar: #f3f3f0;
   --card: #ffffff;
   --foreground: #17181c;
   --muted: #6b6f76;
@@ -27,6 +28,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #131418;
+    --sidebar: #17181d;
     --card: #1b1d22;
     --foreground: #ecedef;
     --muted: #9ba0a8;
@@ -48,6 +50,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-sidebar: var(--sidebar);
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
