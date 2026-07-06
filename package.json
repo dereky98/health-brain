@@ -7,6 +7,12 @@
     "build": "pnpm --filter web build",
     "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint",
-    "test": "pnpm -r test"
+    "test": "vitest run",
+    "gen:types": "supabase gen types typescript --local --schema public > packages/types/database.types.ts"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "^2.49.0",
+    "typescript": "^5",
+    "vitest": "^3.1.0"
   }
 }
