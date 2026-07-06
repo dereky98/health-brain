@@ -7,9 +7,12 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <h1 className="mb-1 text-2xl font-semibold tracking-tight">Health Agg</h1>
-        <p className="mb-8 text-sm text-neutral-500">
-          Your sleep, recovery, and training in one place.
+        <p className="eyebrow">Health Agg</p>
+        <h1 className="mt-2 font-display text-2xl font-semibold tracking-tight">
+          Every night and every mile, on one page
+        </h1>
+        <p className="mb-8 mt-2 text-sm text-muted">
+          Sleep, recovery, and training from WHOOP, Eight Sleep, and Strava.
         </p>
         <Suspense>
           <LoginForm />

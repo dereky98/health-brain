@@ -46,11 +46,11 @@ export function EightSleepConnectModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <div
-        className="w-full max-w-sm rounded-xl bg-white p-6 dark:bg-neutral-900"
+        className="w-full max-w-sm rounded-xl border border-hairline bg-card p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="font-medium">Connect Eight Sleep</h2>
-        <p className="mt-1 text-xs text-neutral-500">
+        <p className="mt-1 text-xs text-muted">
           Eight Sleep has no official API, so we sign in with your account credentials once,
           exchange them for access tokens, and never store your password.
         </p>
@@ -60,28 +60,28 @@ export function EightSleepConnectModal({
             type="email"
             required
             placeholder="Eight Sleep email"
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="w-full rounded-md border border-hairline bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
           />
           <input
             name="password"
             type="password"
             required
             placeholder="Eight Sleep password"
-            className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+            className="w-full rounded-md border border-hairline bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
           />
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-danger">{error}</p>}
           <div className="flex justify-end gap-2 pt-1">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md px-3 py-1.5 text-xs font-medium text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+              className="rounded-md px-3 py-1.5 text-xs font-medium text-muted hover:bg-background"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={pending}
-              className="rounded-md bg-neutral-900 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
+              className="rounded-md bg-foreground px-3 py-1.5 text-xs font-semibold text-background disabled:opacity-50"
             >
               {pending ? "Connecting…" : "Connect"}
             </button>

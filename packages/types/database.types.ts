@@ -299,7 +299,33 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      daily_summaries: {
+        Row: {
+          day_kcal: number | null
+          day_strain: number | null
+          duration_asleep_s: number | null
+          efficiency_pct: number | null
+          local_date: string | null
+          max_strain: number | null
+          recovery_hrv_ms: number | null
+          recovery_provider: Database["public"]["Enums"]["provider_slug"] | null
+          recovery_score: number | null
+          respiratory_rate: number | null
+          resting_hr_bpm: number | null
+          sleep_end_at: string | null
+          sleep_hrv_ms: number | null
+          sleep_provider: Database["public"]["Enums"]["provider_slug"] | null
+          sleep_score: number | null
+          sleep_start_at: string | null
+          time_in_bed_s: number | null
+          user_id: string | null
+          workout_count: number | null
+          workouts_distance_m: number | null
+          workouts_duration_s: number | null
+          workouts_kcal: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

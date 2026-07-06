@@ -94,7 +94,7 @@ export function IntegrationCard({ meta, connection }: { meta: ProviderMeta; conn
   }
 
   return (
-    <div className="flex flex-col rounded-xl border border-neutral-200 p-5 dark:border-neutral-800">
+    <div className="flex flex-col rounded-xl border border-hairline bg-card p-5">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div
@@ -107,20 +107,20 @@ export function IntegrationCard({ meta, connection }: { meta: ProviderMeta; conn
             <div className="flex items-center gap-2">
               <h2 className="font-medium">{meta.name}</h2>
               {meta.beta && (
-                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+                <span className="rounded-full bg-activity-soft px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-activity">
                   Beta · Unofficial
                 </span>
               )}
             </div>
-            <p className="mt-0.5 text-xs text-neutral-500">{meta.tagline}</p>
+            <p className="mt-0.5 text-xs text-muted">{meta.tagline}</p>
           </div>
         </div>
         {connected && (
           <span
             className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
               needsReauth || connection!.status === "error"
-                ? "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
-                : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
+                ? "bg-danger-soft text-danger"
+                : "bg-recovery-soft text-recovery"
             }`}
           >
             {needsReauth ? "Reconnect needed" : connection!.status === "error" ? "Sync error" : "Connected"}
@@ -132,7 +132,7 @@ export function IntegrationCard({ meta, connection }: { meta: ProviderMeta; conn
         {meta.dataTypes.map((d) => (
           <span
             key={d}
-            className="rounded-md bg-neutral-100 px-2 py-0.5 text-[11px] text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400"
+            className="rounded-md bg-background px-2 py-0.5 text-[11px] text-muted"
           >
             {d}
           </span>
@@ -140,18 +140,18 @@ export function IntegrationCard({ meta, connection }: { meta: ProviderMeta; conn
       </div>
 
       {connected && connection?.last_sync_error && connection.status !== "active" && (
-        <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-xs text-red-700 dark:bg-red-900/20 dark:text-red-300">
+        <p className="mt-3 rounded-md bg-danger-soft px-3 py-2 text-xs text-danger">
           {connection.last_sync_error}
         </p>
       )}
       {error && (
-        <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-xs text-red-700 dark:bg-red-900/20 dark:text-red-300">
+        <p className="mt-3 rounded-md bg-danger-soft px-3 py-2 text-xs text-danger">
           {error}
         </p>
       )}
 
       <div className="mt-4 flex flex-1 items-end justify-between">
-        <span className="text-xs text-neutral-400">
+        <span className="text-xs text-faint">
           {connected && connection?.last_synced_at ? `Synced ${timeAgo(connection.last_synced_at)}` : ""}
         </span>
         <div className="flex gap-2">
@@ -160,7 +160,7 @@ export function IntegrationCard({ meta, connection }: { meta: ProviderMeta; conn
               <button
                 onClick={syncNow}
                 disabled={busy !== null}
-                className="rounded-md border border-neutral-300 px-3 py-1.5 text-xs font-medium hover:bg-neutral-50 disabled:opacity-50 dark:border-neutral-700 dark:hover:bg-neutral-800"
+                className="rounded-md border border-hairline px-3 py-1.5 text-xs font-medium hover:bg-background disabled:opacity-50"
               >
                 {busy === "sync" ? "Syncing…" : "Sync now"}
               </button>
@@ -168,7 +168,7 @@ export function IntegrationCard({ meta, connection }: { meta: ProviderMeta; conn
                 <button
                   onClick={connect}
                   disabled={busy !== null}
-                  className="rounded-md bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
+                  className="rounded-md bg-foreground px-3 py-1.5 text-xs font-medium text-background hover:opacity-90 disabled:opacity-50"
                 >
                   Reconnect
                 </button>
@@ -176,7 +176,7 @@ export function IntegrationCard({ meta, connection }: { meta: ProviderMeta; conn
               <button
                 onClick={disconnect}
                 disabled={busy !== null}
-                className="rounded-md px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50 dark:hover:bg-red-900/20"
+                className="rounded-md px-3 py-1.5 text-xs font-medium text-danger hover:bg-danger-soft disabled:opacity-50"
               >
                 {busy === "disconnect" ? "…" : "Disconnect"}
               </button>

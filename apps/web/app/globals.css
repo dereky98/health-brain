@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Health Agg — instrument panel for your body.
+   Domain hues are fixed: sleep=indigo, recovery=green, activity=orange.
+   Palettes validated (CVD separation, contrast, lightness band) for both modes. */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+  --background: #fafaf9;
+  --card: #ffffff;
+  --foreground: #17181c;
+  --muted: #6b6f76;
+  --faint: #9a9ea6;
+  --hairline: #e7e7e2;
+  --hairline-strong: #d8d8d1;
+
+  --sleep: #5b5bd6;
+  --recovery: #178a63;
+  --activity: #d6621e;
+  --sleep-soft: rgba(91, 91, 214, 0.09);
+  --recovery-soft: rgba(23, 138, 99, 0.09);
+  --activity-soft: rgba(214, 98, 30, 0.09);
+
+  --danger: #c23934;
+  --danger-soft: rgba(194, 57, 52, 0.08);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #131418;
+    --card: #1b1d22;
+    --foreground: #ecedef;
+    --muted: #9ba0a8;
+    --faint: #6c7078;
+    --hairline: #2a2c32;
+    --hairline-strong: #383b42;
+
+    --sleep: #6e6ee0;
+    --recovery: #1fa173;
+    --activity: #de7233;
+    --sleep-soft: rgba(110, 110, 224, 0.16);
+    --recovery-soft: rgba(31, 161, 115, 0.16);
+    --activity-soft: rgba(222, 114, 51, 0.16);
+
+    --danger: #e05d57;
+    --danger-soft: rgba(224, 93, 87, 0.14);
   }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-sleep: var(--sleep);
+  --color-recovery: var(--recovery);
+  --color-activity: var(--activity);
+  --color-sleep-soft: var(--sleep-soft);
+  --color-recovery-soft: var(--recovery-soft);
+  --color-activity-soft: var(--activity-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), var(--font-inter), sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "cv11";
+}
+
+/* Eyebrow labels: expanded Archivo caps — the instrument-panel voice */
+.eyebrow {
+  font-family: var(--font-archivo), sans-serif;
+  font-variation-settings: "wdth" 125;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* Big metric numerals: tabular mono so columns of digits align */
+.metric {
+  font-family: var(--font-plex-mono), monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
