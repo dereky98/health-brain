@@ -10,7 +10,10 @@ enabled = true
 port = 55321
 # Schemas to expose in your API. Tables, views and stored procedures in this schema will get API
 # endpoints. `public` and `graphql_public` schemas are included by default.
-schemas = ["public", "graphql_public"]
+# `private` is exposed so service-role edge functions can reach it via PostgREST;
+# anon/authenticated have no grants on it, so clients get permission-denied.
+# (Mirror this list in the hosted project: Dashboard → Settings → API → Exposed schemas.)
+schemas = ["public", "graphql_public", "private"]
 # Extra schemas to add to the search_path of every request.
 extra_search_path = ["public", "extensions"]
 # The maximum number of rows returns from a view, table, or stored procedure. Limits payload size
@@ -363,6 +366,24 @@ deno_version = 2
 
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
+
+# Function auth: routes that providers or browsers hit directly can't carry a
+# Supabase JWT; those functions verify authenticity internally (state rows,
+# HMAC signatures, shared secrets, or per-route JWT checks).
+[functions.oauth]
+verify_jwt = false
+
+[functions.webhooks]
+verify_jwt = false
+
+[functions.sync]
+verify_jwt = false
+
+[functions.disconnect]
+verify_jwt = false
+
+[functions.connect-eightsleep]
+verify_jwt = false
 
 [analytics]
 enabled = true
