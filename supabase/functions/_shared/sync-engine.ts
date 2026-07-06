@@ -10,7 +10,7 @@ const UPSERT_CHUNK = 500;
 
 const CONFLICT_KEY = "user_id,provider,external_id";
 
-async function upsertBatch(db: SupabaseClient, connection: Connection, batch: SyncBatch): Promise<number> {
+export async function upsertBatch(db: SupabaseClient, connection: Connection, batch: SyncBatch): Promise<number> {
   let count = 0;
   const tag = { user_id: connection.user_id, provider: connection.provider };
 

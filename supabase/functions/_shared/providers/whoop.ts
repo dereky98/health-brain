@@ -342,7 +342,7 @@ export const whoop: Provider = {
   async parseWebhook(req: Request, rawBody: string): Promise<WebhookHint | null> {
     const signature = req.headers.get("X-WHOOP-Signature");
     const timestamp = req.headers.get("X-WHOOP-Signature-Timestamp");
-    if (!signature || !timestamp) return null;
+    if (!signature || !timestamp || !clientSecret()) return null;
 
     const key = await crypto.subtle.importKey(
       "raw",
