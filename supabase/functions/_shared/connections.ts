@@ -81,34 +81,53 @@ export async function getValidAccessToken(
   if (fresh(creds)) return decryptToken(creds.access_token_enc!);
   if (!creds.refresh_token_enc) throw new ReauthRequiredError(connection.provider);
 
-  // Try to win the refresh lock (single atomic statement).
-  const nowIso = new Date().toISOString();
-  const lockUntil = new Date(Date.now() + LOCK_SECONDS * 1000).toISOString();
-  const { data: locked, error: lockErr } = await privateSchema(db)
-    .from("provider_credentials")
-    .update({ refresh_lock_until: lockUntil })
-    .eq("connection_id", connection.id)
-    .or(`refresh_lock_until.is.null,refresh_lock_until.lt.${nowIso}`)
-    .select();
-  if (lockErr) throw new Error(`refresh lock failed: ${lockErr.message}`);
+  // Win the refresh lock (single atomic statement). If another worker holds
+  // it, wait for its result — but keep re-trying acquisition, because a
+  // crashed holder (killed runtime, deploy mid-refresh) leaves a stale lock
+  // that simply expires and must be taken over.
+  const tryAcquire = async (): Promise<boolean> => {
+    const nowIso = new Date().toISOString();
+    const lockUntil = new Date(Date.now() + LOCK_SECONDS * 1000).toISOString();
+    // Judged by affected-row count (return=minimal): some runtime/client
+    // combinations return an empty representation for update().select() even
+    // when rows were updated, which would make the winner think it lost and
+    // then deadlock on its own lock.
+    const { count, error: lockErr } = await privateSchema(db)
+      .from("provider_credentials")
+      .update({ refresh_lock_until: lockUntil }, { count: "exact" })
+      .eq("connection_id", connection.id)
+      // inside or=() PostgREST needs values with . / : double-quoted — an
+      // unquoted ISO timestamp silently matches nothing
+      .or(`refresh_lock_until.is.null,refresh_lock_until.lt."${nowIso}"`);
+    if (lockErr) throw new Error(`refresh lock failed: ${lockErr.message}`);
+    return (count ?? 0) > 0;
+  };
 
-  if (!locked || locked.length === 0) {
-    // Another worker is refreshing: wait for it to finish, then use its tokens.
-    for (let i = 0; i < LOCK_SECONDS; i++) {
+  let acquired = await tryAcquire();
+  if (!acquired) {
+    for (let i = 0; i < LOCK_SECONDS + 5; i++) {
       await new Promise((r) => setTimeout(r, 1000));
       creds = await readCredentials(db, connection.id);
+      // the other worker finished — use its tokens
       if (creds.refresh_lock_until === null && fresh(creds)) {
         return decryptToken(creds.access_token_enc!);
       }
+      // the other worker died — its lock expired; take over
+      acquired = await tryAcquire();
+      if (acquired) break;
     }
-    throw new Error(`timed out waiting for concurrent token refresh (${connection.provider})`);
+    if (!acquired) {
+      throw new Error(`timed out waiting for concurrent token refresh (${connection.provider})`);
+    }
   }
 
   // We hold the lock: refresh, persist the new pair, release the lock.
   try {
+    if (!creds.refresh_token_enc) throw new ReauthRequiredError(connection.provider);
     const refreshToken = await decryptToken(creds.refresh_token_enc);
     const tokens = await provider.refreshToken(refreshToken);
     await saveTokens(db, connection.id, tokens); // also clears the lock
+    console.log(`token refreshed for ${connection.provider} connection ${connection.id}`);
     return tokens.accessToken;
   } catch (err) {
     // Release the lock so the next attempt isn't blocked for LOCK_SECONDS.
