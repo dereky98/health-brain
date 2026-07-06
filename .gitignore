@@ -1,0 +1,31 @@
+# dependencies
+node_modules/
+
+# secrets — never commit
+.env
+.env.*
+!.env.example
+supabase/.env
+supabase/functions/.env
+
+# next.js
+apps/web/.next/
+apps/web/out/
+apps/web/next-env.d.ts
+
+# supabase local
+supabase/.branches/
+supabase/.temp/
+
+# build artifacts
+dist/
+*.tsbuildinfo
+
+# xcode / ios
+apps/ios/**/xcuserdata/
+apps/ios/**/DerivedData/
+apps/ios/**/*.xcuserstate
+
+# misc
+.DS_Store
+*.log
