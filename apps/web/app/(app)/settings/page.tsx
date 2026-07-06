@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { ProfileForm } from "./profile-form";
+import { ApiKeys } from "./api-keys";
+import { listApiKeys } from "./api-key-actions";
 
 export const metadata = { title: "Settings — Health Agg" };
 
@@ -26,6 +28,11 @@ export default async function SettingsPage() {
           timezone={profile?.timezone ?? "UTC"}
         />
       </div>
+
+      <ApiKeys
+        keys={await listApiKeys()}
+        mcpUrl={`${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/mcp`}
+      />
     </div>
   );
 }

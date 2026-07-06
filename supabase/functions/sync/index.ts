@@ -41,10 +41,22 @@ async function handleRun(req: Request): Promise<Response> {
 }
 
 async function handleNow(req: Request): Promise<Response> {
-  const user = await userFromRequest(req);
+  const url = new URL(req.url);
+
+  // Two auth paths: a user JWT (web/iOS), or the internal sync secret plus an
+  // explicit user_id (the MCP server acting on behalf of a token-verified user).
+  let user = await userFromRequest(req);
+  if (!user) {
+    const internalUserId = url.searchParams.get("user_id");
+    if (
+      internalUserId &&
+      req.headers.get("x-sync-secret") === Deno.env.get("SYNC_SECRET")
+    ) {
+      user = { id: internalUserId };
+    }
+  }
   if (!user) return json({ error: "unauthorized" }, 401);
 
-  const url = new URL(req.url);
   const providerFilter = url.searchParams.get("provider");
 
   const db = serviceClient();
