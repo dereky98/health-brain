@@ -23,6 +23,10 @@
 
   --danger: #c23934;
   --danger-soft: rgba(194, 57, 52, 0.08);
+
+  /* provider series colors (sleep-source comparison; CVD-validated pair) */
+  --series-whoop: #5b5bd6;
+  --series-eightsleep: #0a9188;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -45,6 +49,9 @@
 
     --danger: #e05d57;
     --danger-soft: rgba(224, 93, 87, 0.14);
+
+    --series-whoop: #6e6ee0;
+    --series-eightsleep: #1ca69e;
   }
 }
 
@@ -65,6 +72,8 @@
   --color-activity-soft: var(--activity-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
+  --color-series-whoop: var(--series-whoop);
+  --color-series-eightsleep: var(--series-eightsleep);
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-archivo), var(--font-inter), sans-serif;
